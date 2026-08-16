@@ -114,8 +114,8 @@ def compute_convergence(simulation: SimulationParameters, euoption: OptionParame
 
     
     for N in simulation.N_values:
-        call_errors = []
-        put_errors = []
+        call_squared_errors = []
+        put_squared_errors = []
 
         call_prices = []
         put_prices = []
@@ -123,24 +123,24 @@ def compute_convergence(simulation: SimulationParameters, euoption: OptionParame
         for repetition in range(simulation.convergence_repetitions):
             #ensure a new seed is used for each monte carlo simulation
             seed = simulation.seed + repetition
-            #compute call and put prices
+       
             mc_call_price, mc_put_price = monte_carlo(euoption, N, M=1, seed=seed)
 
             #append prices to lists
             call_prices.append(mc_call_price)
             put_prices.append(mc_put_price)
 
-            #compute absolute error
-            call_error = abs(mc_call_price - call_bsm)
-            put_error = abs(mc_put_price - put_bsm)
+            #compute squared errors
+            call_squared_error = (mc_call_price - call_bsm)**2
+            put_squared_error = (mc_put_price - put_bsm)**2
 
             #append errors to lists
-            call_errors.append(call_error)
-            put_errors.append(put_error)
+            call_squared_errors.append(call_squared_error)
+            put_squared_errors.append(put_squared_error)
 
-        #compute mean call and put errors
-        mean_call_error = np.mean(call_errors)
-        mean_put_error = np.mean(put_errors)
+        #compute RMSE
+        call_rmse = np.sqrt(np.mean(call_squared_errors))
+        put_rmse = np.sqrt(np.mean(put_squared_errors))
 
         #compute mean call and put prices
         mean_call_price = np.mean(call_prices)
@@ -148,12 +148,11 @@ def compute_convergence(simulation: SimulationParameters, euoption: OptionParame
 
         #append one row to convergence_results
         convergence_results.append([N,
-                                    mean_call_error,
-                                    mean_put_error,
+                                    call_rmse,
+                                    put_rmse,
                                     mean_call_price,
                                     mean_put_price])
         
-    #convert results to numpy array
     convergence_results = np.array(convergence_results)
 
     #calculate linear regression in log-log space, used for convergence
@@ -187,7 +186,6 @@ def compute_complexity(simulation: SimulationParameters, euoption: OptionParamet
             median_runtime = np.median(runtimes)
             complexity_results.append([N, M, median_runtime])
 
-    #convert results to numpy array
     complexity_results = np.array(complexity_results)
 
     return complexity_results
@@ -200,7 +198,7 @@ def plot_error(convergence_results: np.ndarray, call_slope: float, put_slope: fl
     ax1.set_xscale('log')
     ax1.set_title('European Call Option')
     ax1.set_xlabel(r'Number of Simulations ($N$)')
-    ax1.set_ylabel('Absolute Error')
+    ax1.set_ylabel('RMSE')
     ax1.minorticks_off()
     ##Emperical results for slope
     ax1.text(0.95,
@@ -221,7 +219,7 @@ def plot_error(convergence_results: np.ndarray, call_slope: float, put_slope: fl
     ax2.set_xscale('log')
     ax2.set_title('European Put Option')
     ax2.set_xlabel(r'Number of Simulations ($N$)')
-    ax2.set_ylabel('Absolute Error')
+    ax2.set_ylabel('RMSE')
     ax2.minorticks_off()
     ##Emperical results for slope
     ax2.text(0.95,
@@ -234,7 +232,7 @@ def plot_error(convergence_results: np.ndarray, call_slope: float, put_slope: fl
     )
 
     #Plot generation
-    fig.suptitle(r'Monte Carlo Error Convergence ($M=1$)', fontsize=22)
+    fig.suptitle(r'Monte Carlo RMSE Convergence ($M=1$)', fontsize=22)
     plt.savefig('plot_error.png', dpi=300)
     plt.close(fig)
 
@@ -305,7 +303,6 @@ def plot_runtime(complexity_results: np.ndarray, simulation: SimulationParameter
     ax.set_ylabel(r'Execution time ($s$)')
     ax.minorticks_off()
 
-    #legend
     ax.legend(title='Time Steps', frameon=False, loc='upper left')
 
     #plot
