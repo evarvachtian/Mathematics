@@ -26,8 +26,8 @@ bsm_monte_carlo/
 ## Installation
 1. Clone the repository:
 ```bash
-   git clone https://github.com/evarvachtian/Mathematics/projects/bsm_monte_carlo.git
-   cd bsm_monte_carlo
+   git clone https://github.com/evarvachtian/Mathematics.git
+   cd Mathematics/projects/bsm_monte_carlo
 ```
 2. Create a virtual environment
 ```bash
