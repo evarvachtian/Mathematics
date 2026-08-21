@@ -11,12 +11,14 @@ bsm_monte_carlo/
 ├── .gitignore.txt
 ├── README.md
 ├── mc_dataengine.py
-└── mcpaper.pdf
+├── mcpaper.pdf
+└── requirements.txt
 ```
 
 * `mc_dataengine.py`: Python program used in the paper for the Monte Carlo simulation and figure generation.
 * `mcpaper.pdf`: Comprehensive look at the project, mathematics, results, and analysis.
 * `README.md`: General overview and installation instructions.
+* `requirements.txt`: Required python packages for the program to work
 
 ## Requirements
 * Python 3.12-3.14.4
