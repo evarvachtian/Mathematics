@@ -19,7 +19,7 @@ bsm_monte_carlo/
 * `README.md`: General overview and installation instructions.
 
 ## Requirements
-* Python 3
+* Python 3.12-3.14.4
 * NumPy 2.5.1
 * Matplotlib
 
@@ -50,10 +50,10 @@ bsm_monte_carlo/
    With the virtual environment installed and activated, run:
 
 ```bash
-   pip install numpy==2.5.1 matplotlib
+   pip install -r requirements.txt
 ```
 
-Note that NumPy 2.5.1 is recommended, since this is the version used to create the original images found within the [paper](mcpaper.pdf) and should produce the best reproducibility of results.
+Note that NumPy 2.5.1 is recommended, since this is the version used to create the original images found within the [paper](mcpaper.pdf) and should produce the best reproducibility of results. The [project](mc_dataengine.py) was developed and tested using python 3.14.4 and NumPy 2.5.1. 
 
 ## Running the Program
 Run the python script from within the project directory:
